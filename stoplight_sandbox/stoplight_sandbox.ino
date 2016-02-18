@@ -1,13 +1,23 @@
 /*  stoplight_sandbox
- *
- *  The Arduino should be wired with an rgb LED and two 'stoplights'
- *  The 'stoplights' should each be a row of three LEDS, a green, a yellow, and then a red.
- *  You can think of each 'stoplight' as controlling an intersection, either NS (North/South) or EW (East/West).
- *  I arbitrarily chose the 'stoplight' closer to the rgb LED to be NS and the one farther away to be EW.
  *  
+ *  CSE 132 - Studio 3
+ *  
+ *  Fill this out so we know whose studio this is.
+ *  
+ *  Name: Evan Simkowitz
+ *  WUSTL Key: esimkowitz
+ *  
+ *  Name: Brandon Staffeil 
+ *  WUSTL Key:bjstaffeil
+ *  
+ *  Name:
+ *  WUSTL Key:
+ *  
+ *  Name:
+ *  WUSTL Key:
  */
  
-const int rgbPinR = 11;     //rgb LED used for the walk light
+const int rgbPinR = 11;
 const int rgbPinG = 9;
 const int rgbPinB = 10;
 const int NSgreenPin = 5;
@@ -16,25 +26,25 @@ const int NSredPin = 3;
 const int EWgreenPin = 2;
 const int EWyellowPin = 6;
 const int EWredPin = 7;
-const int redR = 255;       //defines the colors used by the rgb LED
+const int redR = 255;
 const int redG = 0;
 const int redB = 0;
 const int whiteR = 255;
 const int whiteG = 255;
 const int whiteB = 255;
-const int NSGTime = 4000;   //defines the time that each state will be on for
+const int NSGTime = 4000;
 const int NSYTime = 2000;
 const int EWGTime = 4000;
 const int EWYTime = 2000;
 const int PedTime = 6000;
-const int deltaTWalk = 233; //sets the half-period of the blinking walk signal
-int deltaT = 0;             //this is the variable we change when changing the timing of each state
+const int deltaTWalk = 233;
+int deltaT = 0;
 long int accumulator = 0;
 long int walkAccumulator = 0;
-enum Direction {EWG, EWY, NSG, NSY, Ped}; //stoplight can be one of these 5 states: NS-Green, NS-Yellow, EW-Green, EW-Yellow, walk signal
-Direction traffic = NSG;    //Starts at NSG
-boolean walkOn = false;     //Used to blink the walk light at a set interval, true when on, false when off
-boolean runPed = false;			//Because Ped state changes the traffic variable to NSG when run, I need a separate variable to tell me when I am in the Ped state
+enum Direction {EWG, EWY, NSG, NSY, Ped};
+Direction traffic = NSG;
+boolean walkOn = false;
+boolean runPed = false;			//So that I can run the Switch and still run the Ped program
 void setup() {
   	pinMode(rgbPinR, OUTPUT);
   	pinMode(rgbPinG, OUTPUT);
@@ -45,13 +55,13 @@ void setup() {
     pinMode(EWgreenPin, OUTPUT);
     pinMode(EWyellowPin, OUTPUT);
     pinMode(EWredPin, OUTPUT);
-    digitalWrite(EWredPin, HIGH);     //Because NSG is part of a loop, it will only digitalWrite() to pins being changed. However, since
-}                                     //EWredPin is supposed to be on at NSG but is not changed by it, I set it on here so that it wil be on in
-                                      //the initial loop.
+    digitalWrite(EWredPin, HIGH);
+}
+
 void loop() {
 	if (millis() - accumulator > deltaT) {
     accumulator += deltaT;
-		switch(traffic) {     //defines what each state of traffic does
+		switch(traffic) {
 			case NSG:   deltaT = NSGTime;
 				          digitalWrite(rgbPinR, redR);
       	          digitalWrite(rgbPinG, redG);
@@ -87,7 +97,7 @@ void loop() {
     		          break;
 		}
 	}
-	if(millis()-walkAccumulator > deltaTWalk) {      //when the Ped state is active, this statement will control the blinking walk signal
+	if(millis()-walkAccumulator > deltaTWalk) {
   	walkAccumulator += deltaTWalk;
     if (runPed) {
     	if (!walkOn) {
